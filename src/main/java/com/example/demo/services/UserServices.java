@@ -19,4 +19,8 @@ public interface UserServices {
 
 	ResponseEntity<Object> sendmail(String email);
 
+	ResponseEntity<String> verify(Long otp, String email, Userdto userdto);
+
+	ResponseEntity<String> update(Userdto userdto, Long userId);
+
 }

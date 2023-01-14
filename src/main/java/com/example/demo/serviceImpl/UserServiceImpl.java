@@ -74,30 +74,70 @@ private String send;
 @Override
 public ResponseEntity<Object> sendmail(String email) {
 	Optional<User> email1=userRepository.findByemail(email);
-	//for use of manually Sending
-	//String to="Enter Your Email";
+	//String to="Enter your otp";
 	int max = 10000000;
 	int min = 99999999;
 	Long a = (long) (Math.random() * (max - min + 1) + min);   
 	System.out.println(a); 
 	if(email1.isPresent()) {
 try {
-	User user=userRepository.getByEmail(email);
+	User user1=userRepository.getByEmail(email);
 	SimpleMailMessage mailMessage=new SimpleMailMessage();
 	mailMessage.setFrom(send);
 	mailMessage.setTo(email);
 	mailMessage.setSubject("verification Email ");
 	mailMessage.setText("OTP is "+a);
-	user.setOtp(a);
-	user.setDate(new Date());
+	user1.setOtp(a);
+	user1.setDate(new Date());
 	javaMailSender.send(mailMessage);
-	userRepository.save(user);
+	userRepository.save(user1);
 	
 	return new ResponseEntity<>("Email Send Successfully...",HttpStatus.OK);
 } catch (Exception e) {
 e.printStackTrace();
 }	}
 	return new ResponseEntity<>("Email NOT Send Successfully...",HttpStatus.OK);
+
+}
+
+//Verify Email otp
+
+@Override
+public ResponseEntity<String> verify(Long otp,String email,Userdto userdto) {
+	Optional<User> email1=userRepository.findByemail(userdto.getEmail());
+	Optional<User> otp1=userRepository.findByOtp(userdto.getOtp());
+	long currentTimeInMillis = System.currentTimeMillis();
+	long expire=otp1.get().getDate().getTime()+1 * 60 * 1000;
+	System.out.println(currentTimeInMillis);
+	if(email1.isPresent() && otp1.isPresent()) {
+		if(currentTimeInMillis<=expire)
+		{		return new ResponseEntity<>("OTP IS VERIFIED SUCESSFULLY...",HttpStatus.OK);
+		
+		}else {
+			return new ResponseEntity<>("OTP IS NOT VALID...",HttpStatus.OK);
+
+		}
+	}
+	return new ResponseEntity<>("OTP IS NOT VERIFIED...",HttpStatus.OK);
+}
+
+//update the user
+@Override
+public ResponseEntity<String> update(Userdto userdto, Long userId) {
+Optional<User> user1=userRepository.findById(userId);
+if(user1.isPresent()) {
+	User user2=userRepository.getById(userId);
+	user2.setUserName(userdto.getUserName());
+	user2.setEmail(userdto.getEmail());
+	user2.setPassword(userdto.getPassword());
+	user2.setPhoneNo(userdto.getPhoneNo());
+	userRepository.save(user2);
+	return new ResponseEntity<>("USER ARE UPDATED SUCESSFULLY.... ",HttpStatus.OK); 
+
+}else {
+	return new ResponseEntity<>("USER ARE NOT PRESENT.... ",HttpStatus.OK); 
+
+}
 
 }
 }

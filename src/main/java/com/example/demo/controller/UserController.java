@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.Userdto;
@@ -42,4 +43,13 @@ public ResponseEntity<Object> sendmail(@PathVariable("email") String email){
 	return userServices.sendmail(email);
 }
 
+@PostMapping("/verify")
+public ResponseEntity<String> verify(Long otp,String email,@RequestBody Userdto userdto){
+	return userServices.verify(otp,email,userdto);
+}
+
+@PutMapping("/update/{userId}")
+public ResponseEntity<String> update(@RequestBody Userdto userdto,@PathVariable("userId")Long userId){
+	return userServices.update(userdto,userId);
+}
 }
