@@ -52,4 +52,8 @@ public ResponseEntity<String> verify(Long otp,String email,@RequestBody Userdto 
 public ResponseEntity<String> update(@RequestBody Userdto userdto,@PathVariable("userId")Long userId){
 	return userServices.update(userdto,userId);
 }
+@PostMapping("/login")
+public ResponseEntity<String> login(String email,String password){
+	return userServices.login(email,password);
+}
 }

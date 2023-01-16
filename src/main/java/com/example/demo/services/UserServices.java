@@ -23,4 +23,6 @@ public interface UserServices {
 
 	ResponseEntity<String> update(Userdto userdto, Long userId);
 
+	ResponseEntity<String> login(String email, String password);
+
 }

@@ -74,7 +74,7 @@ private String send;
 @Override
 public ResponseEntity<Object> sendmail(String email) {
 	Optional<User> email1=userRepository.findByemail(email);
-	//String to="Enter your otp";
+	
 	int max = 10000000;
 	int min = 99999999;
 	Long a = (long) (Math.random() * (max - min + 1) + min);   
@@ -100,8 +100,7 @@ e.printStackTrace();
 
 }
 
-//Verify Email otp
-
+//otp verification
 @Override
 public ResponseEntity<String> verify(Long otp,String email,Userdto userdto) {
 	Optional<User> email1=userRepository.findByemail(userdto.getEmail());
@@ -121,7 +120,7 @@ public ResponseEntity<String> verify(Long otp,String email,Userdto userdto) {
 	return new ResponseEntity<>("OTP IS NOT VERIFIED...",HttpStatus.OK);
 }
 
-//update the user
+//update the user Information
 @Override
 public ResponseEntity<String> update(Userdto userdto, Long userId) {
 Optional<User> user1=userRepository.findById(userId);
@@ -139,5 +138,20 @@ if(user1.isPresent()) {
 
 }
 
+}
+
+//Basic Login API
+
+@Override
+public ResponseEntity<String> login(String email, String password) {
+Optional<User> email2=userRepository.findByemail(email);
+System.out.println(email2);
+Optional<User> pass=userRepository.findBypassword(password);
+if(email2.isPresent() && pass.isPresent()) {
+	return new ResponseEntity<>("LOGIN SUCESSFULLY.... ",HttpStatus.OK); 
+}else {
+	return new ResponseEntity<>("LOGIN FAILED.... ",HttpStatus.OK); 
+}
+ 
 }
 }
