@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.UserRepository;
@@ -22,13 +23,19 @@ public class UserServiceImpl implements UserServices {
 @Autowired
 UserRepository userRepository;
 
+@Autowired
+BCryptPasswordEncoder bEncoder;
+
 //save the User
 @Override
 public ResponseEntity<String> save(Userdto userdto) {
 	User user=new User();
 	user.setUserName(userdto.getUserName());
 	user.setEmail(userdto.getEmail());
-	user.setPassword(userdto.getPassword());
+	//Password encryption 
+	user.setPassword(bEncoder.encode(userdto.getPassword()));
+	//Password without encryption
+	//user.setPassword(userdto.getPassword());
 	user.setPhoneNo(userdto.getPhoneNo());
 	//user.setDate(new Date());
 	userRepository.save(user);
@@ -74,7 +81,7 @@ private String send;
 @Override
 public ResponseEntity<Object> sendmail(String email) {
 	Optional<User> email1=userRepository.findByemail(email);
-	
+	//String to="sandip76980@gmail.com";
 	int max = 10000000;
 	int min = 99999999;
 	Long a = (long) (Math.random() * (max - min + 1) + min);   
